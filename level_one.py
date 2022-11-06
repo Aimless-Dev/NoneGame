@@ -26,6 +26,7 @@ class LevelOne:
         self.pos   = 0 # 0 es derecha y 1 es izquierda
         self.left = False
         self.rigth = True
+        self.junpfx = pygame.mixer.Sound("assets/salto.wav")
 
         self.test_background = pygame.image.load('sprites/backgrounds/MapaUno.png').convert()
 
@@ -37,6 +38,30 @@ class LevelOne:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w:
+                        self.jump = True
+                
+                        if self.rigth is True and self.left is False:
+                            self.player_jump_r.update(self.screen, x, y)
+
+                        if self.rigth is False and self.left is True:
+                            self.player_jump_l.update(self.screen, x, y)
+
+                        if pygame.key.get_pressed()[pygame.K_d]:
+                            
+                            self.player_run_r.update(self.screen, x, y)
+                            x += 5 
+
+                        if pygame.key.get_pressed()[pygame.K_a]:
+                            
+                            self.player_run_l.update(self.screen, x, y)
+                            x -= 5 
+
+                        self.junpfx.play(0)
+                    if event.key == pygame.K_ESCAPE:
+                        return
 
             if pygame.key.get_pressed()[pygame.K_d] :
                 #Corre a la derecha
@@ -55,26 +80,6 @@ class LevelOne:
                 self.speed -= 5
                 x -= 5
                 self.pos = 1
-
-            elif pygame.key.get_pressed()[pygame.K_w] :
-                #Corre a la izquierda
-                self.jump = True
-                
-                if self.rigth is True and self.left is False:
-                    self.player_jump_r.update(self.screen, x, y)
-
-                if self.rigth is False and self.left is True:
-                    self.player_jump_l.update(self.screen, x, y)
-
-                if pygame.key.get_pressed()[pygame.K_d]:
-                    
-                    self.player_run_r.update(self.screen, x, y)
-                    x += 5 
-
-                if pygame.key.get_pressed()[pygame.K_a]:
-                    
-                    self.player_run_l.update(self.screen, x, y)
-                    x -= 5 
             else:
                 #se queda parado
                 self.speed = 0
@@ -84,8 +89,6 @@ class LevelOne:
                 if self.pos == 1:
                     self.player_idle_l.update(self.screen, x, y)
                     
-            if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                return 
 
             if self.jump:
                 if self.salto >= -6:
